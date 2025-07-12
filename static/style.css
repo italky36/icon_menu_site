@@ -1,13 +1,23 @@
+/* ===== КИОСК: без вертикальной прокрутки и с Roboto Bold ===== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap&subset=cyrillic');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* ==== Общие стили ==== */
 body {
-  margin: 0;
-  padding: 40px;
   background-color: #f0f0f0;
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
   color: #333;
 }
 h1, h2 {
   margin-bottom: 20px;
+  font-weight: 700;
 }
 
 /* ==== Ссылки ==== */
@@ -19,7 +29,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ==== Формы ==== */
+/* ==== Формы (админка) ==== */
 form {
   background: #fff;
   padding: 20px;
@@ -36,6 +46,8 @@ form button {
   margin-bottom: 10px;
   padding: 8px;
   box-sizing: border-box;
+  font-family: inherit;
+  font-weight: 700;
 }
 form button {
   background-color: #0066cc;
@@ -62,77 +74,24 @@ ul li img {
   margin-right: 10px;
 }
 
-/* ==== Публичная сетка ==== */
-.grid {
-  display: grid;
-  gap: 10px;
-  padding: 20px;
-  justify-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-}
-.item {
-  text-align: center;
-  background: rgba(255,255,255,0.8);
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.hidden {
-  display: none;
-}
-#qr {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: transparent;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin: 10px;
-}
-.touch-area {
-  touch-action: pan-y;
-}
-
-
-/* делаем фон full-screen */
-.background {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background-size: cover;
-  background-position: center;
-  z-index: 0;
-}
-
-/* контейнер страниц поверх фона */
+/* ==== Главная сетка (киоск) ==== */
 .pages {
   position: relative;
   z-index: 1;
-  width: 100vw; height: 100vh;
+  width: 100vw;
+  height: calc(100vh - 100px);
   display: flex;
-  align-items: center;
   justify-content: center;
 }
-
-/* сетка */
 .grid {
   display: grid;
   gap: 20px;
-  width: 90vw;  /* подгоняем под экран киоска */
-  height: 80vh;
+  padding: 20px;
+  width: 90vw;
+  margin-top: 40px;
 }
-
-/* ячейка */
 .cell {
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -148,9 +107,10 @@ ul li img {
 }
 .cell .label {
   text-align: center;
+  font-weight: 700;
 }
 
-/* навигация */
+/* ==== Пагинация ==== */
 .pagination {
   position: absolute;
   bottom: 20px;
@@ -158,7 +118,7 @@ ul li img {
   display: flex;
   justify-content: center;
   gap: 40px;
-  z-index: 1;
+  z-index: 2;
 }
 .pagination button {
   font-size: 1.5rem;
@@ -168,15 +128,30 @@ ul li img {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: 700;
 }
 
-/* оверлей QR */
+/* ==== Фон ==== */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+/* ==== Оверлей QR ==== */
 .overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: transparent;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,29 +167,27 @@ ul li img {
   border: none;
   background: white;
   cursor: pointer;
+  font-weight: 700;
 }
-
-/* Оформление контейнера QR-кода */
 .overlay #qrcode {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  display: inline-block;   /* чтобы белая область была по размеру кода */
+  display: inline-block;
 }
 
-.countdown {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  z-index: 3;
-}
-
+/* Таймер автоскрытия QR */
 .qr-timer {
   margin-top: 10px;
-  color: #eee;
+  color: #000;
   font-size: 0.9rem;
+  font-family: inherit;
+  background: rgba(255,255,255,0.8);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Убираем списки в админке */
+.hidden {
+  display: none;
 }

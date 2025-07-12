@@ -102,14 +102,16 @@
       qrTimer = setTimeout(hideQR, timeout);
     }
 
-    function hideQR() {
+   function hideQR() {
       clearTimeout(qrTimer);
       clearInterval(qrCountdown);
       qrOverlay.classList.add("hidden");
-      pages.style.display      = "block";
+      // вернуть отображение сетки и пагинации
+      pages.style.display      = "flex";
       pagination.style.display = "flex";
-      qrTimerEl.style.display = "none";
-    }
+      // перерисовать текущую страницу, чтобы позиционирование сбросилось
+      renderPage(currentPage);
+   }
 
     // свайп
     let startX = 0;
