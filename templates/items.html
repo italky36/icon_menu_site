@@ -1,0 +1,2 @@
+
+<!DOCTYPE html><html><body><h2>Items</h2><form action="/admin/items" method="post" enctype="multipart/form-data"><input name="label" placeholder="Label"><input name="qr_text" placeholder="QR text"><input type="file" name="image"><button>Add</button></form><ul>{% for item in items %}<li><img src="{{ item.image_path }}" width="40"> {{ item.label }}</li>{% endfor %}</ul><a href="/admin">Back</a></body></html>

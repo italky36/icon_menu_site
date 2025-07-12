@@ -1,0 +1,8 @@
+
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Assign</title><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script><style>.grid,.available{min-height:200px;padding:10px;border:1px solid #ccc;} .item{padding:5px;margin:5px;background:#fff;border:1px solid #999;cursor:move;}</style></head><body>
+<h2>Assign {{ route.title }}</h2>
+<form method="post"><div style="display:flex;gap:20px"><div id="grid" class="grid">{% for it in assigned %}<div class="item" data-id="{{ it.id }}"><img src="{{ it.image_path }}" width="40"><br>{{ it.label }}</div>{% endfor %}</div>
+<div id="available" class="available">{% for it in available %}<div class="item" data-id="{{ it.id }}"><img src="{{ it.image_path }}" width="40"><br>{{ it.label }}</div>{% endfor %}</div></div>
+<input type="hidden" name="order" id="orderInput"><button onclick="prepare()">Save</button></form>
+<script>new Sortable(grid,{group:'shared',animation:150});new Sortable(available,{group:'shared',animation:150});function prepare(){var ids=Array.from(grid.children).map(e=>e.dataset.id);orderInput.value=ids.join(',');}</script>
+</body></html>

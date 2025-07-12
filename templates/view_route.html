@@ -1,0 +1,19 @@
+
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>{{ route.title }}</title><link rel="stylesheet" href="/static/style.css"><script src="/static/qrcode.min.js"></script></head>
+<body style="background-image:url('{{ route.background_path }}');background-size:cover;">
+<div id="pages" class="touch-area"></div><div class="pagination"><button onclick="prevPage()">←</button><span id="pageCounter">1</span><button onclick="nextPage()">→</button></div>
+<div id="qr" class="hidden"><div id="qrcode"></div><button onclick="goBack()">Back</button></div>
+<script>
+const timeout={{ route.timeout }},rows={{ route.rows }},cols={{ route.cols }},perPage=rows*cols,items={{ items|tojson }},inactivity={{ inactivity_timeout }};
+let currentPage=0,timer, idleTimer;
+function paginate(a,s){return [...Array(Math.ceil(a.length/s))].map((_,i)=>a.slice(i*s,i*s+s));}
+function renderPage(i){let c=pages;let p=paginated[i]||[];c.innerHTML='';let g=document.createElement('div');g.className='grid';p.forEach(it=>{let d=document.createElement('div');d.className='item';d.innerHTML=`<img src="${it.image_path}"><div>${it.label}</div>`;d.onclick=()=>showQR(it.qr_text);g.appendChild(d)});c.appendChild(g);pageCounter.innerText=i+1;}
+function nextPage(){if(currentPage<paginated.length-1){currentPage++;renderPage(currentPage);}}
+function prevPage(){if(currentPage>0){currentPage--;renderPage(currentPage);}}
+function showQR(t){clearTimeout(timer);pages.style.display='none';pagination.style.display='none';qr.classList.remove('hidden');qrcode.innerHTML='';new QRCode('qrcode',{text:t,width:200,height:200});timer=setTimeout(goBack,timeout);}
+function goBack(){qr.classList.add('hidden');pages.style.display='block';pagination.style.display='flex';clearTimeout(timer);}
+let startX=0;pages.addEventListener('touchstart',e=>startX=e.touches[0].clientX);pages.addEventListener('touchend',e=>{let d=e.changedTouches[0].clientX-startX;if(d>50)prevPage();else if(d<-50)nextPage();});
+function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>location.href='/',inactivity);}['click','touchstart','mousemove'].forEach(ev=>document.addEventListener(ev,resetIdle));resetIdle();
+const paginated=paginate(items,perPage);renderPage(0);
+</script>
+</body></html>

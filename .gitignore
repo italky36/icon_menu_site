@@ -1,0 +1,13 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Окружения
+venv/
+.env/
+
+# SQLite
+db.sqlite3
+
+# Медиа-папки (если хочешь)
+media/
