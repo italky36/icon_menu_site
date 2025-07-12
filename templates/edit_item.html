@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактировать «{{ item.label }}»</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Редактировать иконку</h1>
+
+  <form action="/admin/items/{{ item.id }}/edit" method="post" enctype="multipart/form-data">
+    <label>Подпись<br>
+      <input name="label" value="{{ item.label }}" required>
+    </label><br><br>
+
+    <label>QR текст<br>
+      <input name="qr_text" value="{{ item.qr_text }}" required>
+    </label><br><br>
+
+    <p>Текущая иконка:<br>
+      <img src="{{ item.image_path }}" width="80" alt="">
+    </p>
+
+    <label>Новая картинка (опционально)<br>
+      <input type="file" name="image" accept="image/*">
+    </label><br><br>
+
+    <button type="submit">Сохранить</button>
+  </form>
+
+  <p><a href="/admin/items">← Назад к списку</a></p>
+</body>
+</html>

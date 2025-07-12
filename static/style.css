@@ -101,3 +101,103 @@ ul li img {
   touch-action: pan-y;
 }
 
+
+/* делаем фон full-screen */
+.background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+/* контейнер страниц поверх фона */
+.pages {
+  position: relative;
+  z-index: 1;
+  width: 100vw; height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* сетка */
+.grid {
+  display: grid;
+  gap: 20px;
+  width: 90vw;  /* подгоняем под экран киоска */
+  height: 80vh;
+}
+
+/* ячейка */
+.cell {
+  background: rgba(255,255,255,0.8);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.cell img {
+  max-width: 60%;
+  max-height: 60%;
+  margin-bottom: 8px;
+}
+.cell .label {
+  text-align: center;
+}
+
+/* навигация */
+.pagination {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  z-index: 1;
+}
+.pagination button {
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* оверлей QR */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.8);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.overlay.hidden {
+  display: none;
+}
+.overlay button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+/* Оформление контейнера QR-кода */
+.overlay #qrcode {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: inline-block;   /* чтобы белая область была по размеру кода */
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактировать набор «{{ route.title }}»</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Редактировать набор</h1>
+  <form action="/admin/routes/{{ route.id }}/edit" method="post" enctype="multipart/form-data">
+    <label>Route (URL)<br>
+      <input name="route" value="{{ route.route }}" required>
+    </label><br><br>
+
+    <label>Заголовок<br>
+      <input name="title" value="{{ route.title }}" required>
+    </label><br><br>
+
+    <label>Строки<br>
+      <input name="rows" type="number" value="{{ route.rows }}" required>
+    </label><br><br>
+
+    <label>Столбцы<br>
+      <input name="cols" type="number" value="{{ route.cols }}" required>
+    </label><br><br>
+
+    <label>Таймер (мс)<br>
+      <input name="timeout" type="number" value="{{ route.timeout }}" required>
+    </label><br><br>
+
+    <p>Текущий фон:<br>
+      {% if route.background_path %}
+        <img src="{{ route.background_path }}" width="120" alt="">
+      {% else %}
+        <em>Не задан</em>
+      {% endif %}
+    </p>
+
+    <label>Новый фон (опционально)<br>
+      <input type="file" name="background" accept="image/*">
+    </label><br><br>
+
+    <button type="submit">Сохранить</button>
+  </form>
+
+  <p><a href="/admin/routes">← Назад к списку наборов</a></p>
+</body>
+</html>

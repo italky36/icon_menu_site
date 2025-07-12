@@ -1,2 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Наборы</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Наборы</h1>
+  <form action="/admin/routes" method="post" enctype="multipart/form-data">
+    <input name="route" placeholder="route (например: menu1)" required><br>
+    <input name="title" placeholder="Заголовок" required><br>
+    <input name="rows" type="number" placeholder="Строки" required><br>
+    <input name="cols" type="number" placeholder="Столбцы" required><br>
+    <input name="timeout" type="number" placeholder="Таймер (мс)" required><br>
+    <input type="file" name="background" accept="image/*"><br>
+    <button type="submit">Создать</button>
+  </form>
 
-<!DOCTYPE html><html><body><h2>Routes</h2><form action="/admin/routes" method="post" enctype="multipart/form-data"><input name="route" placeholder="route"><input name="title" placeholder="title"><input name="rows" type="number" placeholder="rows"><input name="cols" type="number" placeholder="cols"><input name="timeout" type="number" placeholder="timeout"><input type="file" name="background"><button>Create</button></form><ul>{% for r in routes %}<li><strong>{{ r.route }}</strong> - {{ r.title }} (<a href="/admin/routes/{{ r.id }}/assign">assign</a>)</li>{% endfor %}</ul><a href="/admin">Back</a></body></html>
+  <ul>
+    {% for r in routes %}
+      <li>
+        <strong>{{ r.route }}</strong> —
+        {{ r.title }}
+        ({{ r.rows }}×{{ r.cols }}, {{ r.timeout }} мс)
+        {% if r.background_path %}
+          <br><em>Фон:</em> <img src="{{ r.background_path }}" alt="" width="60">
+        {% endif %}
+        <br>
+         <a href="/admin/routes/{{ r.id }}/assign">🎯 Назначить иконки</a>
+         <a href="/admin/routes/{{ r.id }}/edit">✏️ Изменить набор</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p><a href="/admin">← Назад</a></p>
+</body>
+</html>

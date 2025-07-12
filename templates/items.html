@@ -1,2 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Иконки</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Иконки</h1>
 
-<!DOCTYPE html><html><body><h2>Items</h2><form action="/admin/items" method="post" enctype="multipart/form-data"><input name="label" placeholder="Label"><input name="qr_text" placeholder="QR text"><input type="file" name="image"><button>Add</button></form><ul>{% for item in items %}<li><img src="{{ item.image_path }}" width="40"> {{ item.label }}</li>{% endfor %}</ul><a href="/admin">Back</a></body></html>
+  <!-- Форма добавления новой иконки -->
+  <form action="/admin/items" method="post" enctype="multipart/form-data">
+    <input name="label" placeholder="Подпись" required><br>
+    <input name="qr_text" placeholder="QR текст" required><br>
+    <input type="file" name="image" accept="image/*" required><br>
+    <button type="submit">Добавить</button>
+  </form>
+
+  <!-- Список существующих иконок с кнопками -->
+  <ul>
+    {% for item in items %}
+      <li class="item-row">
+        <img src="{{ item.image_path }}" width="40" alt=""> 
+        <strong>{{ item.label }}</strong> — {{ item.qr_text }}
+
+        <!-- Ссылка на редактирование -->
+        <a href="/admin/items/{{ item.id }}/edit">✏️ Ред.</a>
+
+        <!-- Форма удаления -->
+        <form action="/admin/items/{{ item.id }}/delete" method="post" 
+              style="display:inline" onsubmit="return confirm('Удалить «{{ item.label }}»?')">
+          <button type="submit">🗑️ Удалить</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p><a href="/admin">← Назад</a></p>
+</body>
+</html>
