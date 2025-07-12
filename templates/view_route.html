@@ -11,44 +11,46 @@
   <!-- Фон -->
   <div class="background" style="background-image: url('{{ route.background_path }}');"></div>
 
-  <!-- Контейнер со всеми страницами -->
+  <!-- Контейнер со страницами -->
   <div id="pages" class="pages"></div>
 
-  <!-- Кнопки пагинации -->
+  <!-- Пагинация -->
   <div id="pagination" class="pagination">
     <button id="prev">←</button>
     <span id="pageCounter">1</span>
     <button id="next">→</button>
   </div>
 
-  <!-- Оверлей QR -->
+  <!-- Оверлей с QR -->
   <div id="qrOverlay" class="overlay hidden">
     <div id="qrcode"></div>
-    <button id="back">Назад</button>
+    <button id="back" onclick="hideQR()">Назад</button>
+    <!-- Таймер автоскрытия QR -->
+    <div id="qr-timer" class="qr-timer"></div>
   </div>
 
   <script>
-    // === КОНСТАНТЫ И ПЕРЕМЕННЫЕ ===
     const rows        = {{ route.rows }};
     const cols        = {{ route.cols }};
     const perPage     = rows * cols;
     const timeout     = {{ route.timeout }};
     const inactivity  = {{ inactivity_timeout }};
     const items       = {{ items | tojson }};
-    let   currentPage = 0;
-    let   pagesArr, qrTimer, idleTimer;
 
-    // DOM-элементы
-    const pages      = document.getElementById("pages");
-    const pagination = document.getElementById("pagination");
-    const btnNext    = document.getElementById("next");
-    const btnPrev    = document.getElementById("prev");
-    const pageCounter= document.getElementById("pageCounter");
-    const qrOverlay  = document.getElementById("qrOverlay");
-    const qrContainer= document.getElementById("qrcode");
-    const btnBack    = document.getElementById("back");
+    let currentPage = 0, pagesArr, qrTimer, qrCountdown, idleTimer;
 
-    // === ФУНКЦИИ ===
+    // DOM
+    const pages       = document.getElementById("pages");
+    const pagination  = document.getElementById("pagination");
+    const btnNext     = document.getElementById("next");
+    const btnPrev     = document.getElementById("prev");
+    const pageCounter = document.getElementById("pageCounter");
+    const qrOverlay   = document.getElementById("qrOverlay");
+    const qrContainer = document.getElementById("qrcode");
+    const btnBack     = document.getElementById("back");
+    const qrTimerEl   = document.getElementById("qr-timer");
+
+    // разбивка на страницы
     function paginate(arr, size) {
       const out = [];
       for (let i = 0; i < arr.length; i += size) {
@@ -81,50 +83,55 @@
 
     function showQR(text) {
       clearTimeout(qrTimer);
+      clearInterval(qrCountdown);
       pages.style.display      = "none";
       pagination.style.display = "none";
       qrOverlay.classList.remove("hidden");
       qrContainer.innerHTML = "";
       new QRCode(qrContainer, { text, width:200, height:200 });
-      // автоскрытие
+
+      let sec = timeout / 1000;
+      qrTimerEl.style.display = "block";
+      qrTimerEl.innerText = `Авто-скрытие через ${sec}s`;
+      qrCountdown = setInterval(() => {
+        sec--;
+        if (sec > 0) qrTimerEl.innerText = `Авто-скрытие через ${sec}s`;
+        else clearInterval(qrCountdown);
+      }, 1000);
+
       qrTimer = setTimeout(hideQR, timeout);
     }
 
     function hideQR() {
       clearTimeout(qrTimer);
+      clearInterval(qrCountdown);
       qrOverlay.classList.add("hidden");
       pages.style.display      = "block";
       pagination.style.display = "flex";
+      qrTimerEl.style.display = "none";
     }
-
-    function resetIdle() {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => location.href = "/", inactivity);
-    }
-
-    // === СОБЫТИЯ ===
-    btnNext.onclick = () => {
-      if (currentPage < pagesArr.length - 1) renderPage(++currentPage);
-    };
-    btnPrev.onclick = () => {
-      if (currentPage > 0) renderPage(--currentPage);
-    };
-    btnBack.onclick = hideQR;
 
     // свайп
     let startX = 0;
     pages.addEventListener("touchstart", e => startX = e.touches[0].clientX);
     pages.addEventListener("touchend", e => {
-      const delta = e.changedTouches[0].clientX - startX;
+      let delta = e.changedTouches[0].clientX - startX;
       if (delta > 50) btnPrev.click();
-      else if (delta < -50) btnNext.click();
+      if (delta < -50) btnNext.click();
     });
 
-    ["click","touchstart","mousemove"].forEach(ev => document.addEventListener(ev, resetIdle));
-
-    // === ИНИЦИАЛИЗАЦИЯ ===
-    pagesArr = paginate(items, perPage);
+    // автопереход при бездействии (только редирект, без визуального счётчика)
+    function resetIdle() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => location.href = "/", inactivity);
+    }
+    ["click","touchstart","mousemove"].forEach(ev =>
+      document.addEventListener(ev, resetIdle)
+    );
     resetIdle();
+
+    // инициализация
+    pagesArr = paginate(items, perPage);
     renderPage(0);
   </script>
 </body>
