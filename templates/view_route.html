@@ -63,23 +63,36 @@
       pages.innerHTML = "";
       const grid = document.createElement("div");
       grid.className = "grid";
-      grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
-      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
-      pagesArr[idx].forEach(item => {
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.innerHTML = `
-          <img src="${item.image_path}" alt="${item.label}">
-          <div class="label">${item.label}</div>
-        `;
-        cell.onclick = () => showQR(item.qr_text);
-        grid.appendChild(cell);
-      });
-
-      pages.appendChild(grid);
-      pageCounter.innerText = idx + 1;
+      // Фоллбэк для старых WebView без CSS Grid
+      if (CSS && CSS.supports && CSS.supports('display','grid')) {
+        grid.style.display = 'grid';
+        grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
+        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    } else {
+        grid.style.display = 'flex';
+        grid.style.flexWrap = 'wrap';
     }
+
+    pagesArr[idx].forEach(item => {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      // если flex-фоллбэк, задаём размер ячейки
+      if (!(CSS && CSS.supports && CSS.supports('display','grid'))) {
+        cell.style.flex = `0 0 ${100/cols}%`;
+      }
+      cell.innerHTML = `
+        <img src="${item.image_path}" alt="${item.label}">
+        <div class="label">${item.label}</div>
+      `;
+      cell.onclick = () => showQR(item.qr_text);
+      grid.appendChild(cell);
+    });
+
+    pages.appendChild(grid);
+    pageCounter.innerText = idx + 1;
+  }
+
 
     function showQR(text) {
       clearTimeout(qrTimer);

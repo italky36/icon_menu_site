@@ -80,25 +80,16 @@ ul li img {
   z-index: 1;
   width: 100vw;
   height: calc(100vh - 100px);
-  display: flex;             /* горизонтальное центрирование */
+  display: flex;
   justify-content: center;
 }
-
-/* Flex-fallback + современный Grid */
 .grid {
-  /* 1) Flex-fallback для старых WebView */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  /* 2) Современная сетка (если поддерживается) */
   display: grid;
   gap: 20px;
   padding: 20px;
   width: 90vw;
   margin-top: 40px;
 }
-
 .cell {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 8px;
